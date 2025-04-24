@@ -13,7 +13,7 @@ export class VoiceManager {
         const connection = joinVoiceChannel({
             channelId: channel.id,
             guildId: guild.id,
-            adapterCreator: guild.voiceAdapterCreator,
+            adapterCreator: guild.voiceAdapterCreator as any,
         });
 
         this.connections.set(guildId, connection);
