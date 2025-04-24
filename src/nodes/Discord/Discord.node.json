@@ -1,5 +1,5 @@
 {
-  "node": "@kmcbride3/n8n-nodes-discord.discord",
+  "node": "n8n-nodes-discord-bot.discord",
   "nodeVersion": "1.0",
   "codexVersion": "1.0",
   "categories": ["Messaging"],
@@ -11,7 +11,7 @@
     ],
     "primaryDocumentation": [
       {
-        "url": "https://github.com/kmcbride3/n8n-nodes-discord"
+        "url": "https://github.com/Raaid17/n8n-nodes-discord-bot"
       }
     ]
   }
