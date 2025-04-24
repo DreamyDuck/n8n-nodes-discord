@@ -11,6 +11,7 @@ export interface ICredentials {
   token: string
   apiKey: string
   baseUrl: string
+  guild: any // We'll use any for now since we don't have the exact type
 }
 
 export const connection = (credentials: ICredentials): Promise<string> => {

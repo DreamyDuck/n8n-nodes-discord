@@ -1,5 +1,5 @@
 {
-  "name": "@kmcbride3/n8n-nodes-discord",
+  "name": "n8n-nodes-discord-bot",
   "version": "0.7.4",
   "description": "nodes to trigger workflows from Discord or send interactive messages. Uses the components API which allows to create dialogs (e.g. attach buttons and wait for the user to click on them)",
   "keywords": [
@@ -80,7 +80,10 @@
     "axios": "^1.8.4",
     "discord.js": "^14.18.0",
     "hexoid": "^2.0.0",
-    "node-ipc": "^12.0.0"
+    "node-ipc": "^12.0.0",
+    "@discordjs/opus": "^0.9.0",
+    "@discordjs/voice": "^0.18.0",
+    "ytdl-core": "^4.11.5"
   },
   "packageManager": "pnpm@9.12.3"
 }

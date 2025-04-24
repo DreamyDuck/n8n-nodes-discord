@@ -37,6 +37,7 @@ export default function bot() {
         GatewayIntentBits.GuildMembers,
         GatewayIntentBits.GuildPresences,
         GatewayIntentBits.GuildMessageReactions,
+        GatewayIntentBits.GuildVoiceStates,
       ],
       partials: [Partials.Message, Partials.Channel, Partials.Reaction],
     })

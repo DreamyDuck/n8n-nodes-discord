@@ -82,6 +82,11 @@ export const options: INodeProperties[] = [
         description: 'Instead of sending a message, it will perform an action defined in the next field.',
       },
       {
+        name: 'Voice',
+        value: 'voice',
+        description: 'Perform voice-related actions like joining channels and playing audio.',
+      },
+      {
         name: 'None',
         value: 'none',
         description:
@@ -801,5 +806,71 @@ export const options: INodeProperties[] = [
     type: 'string',
     default: '',
     description: 'Reason for the action to be logged in the audit log',
+  },
+  {
+    displayName: 'Voice Action',
+    name: 'voiceAction',
+    required: false,
+    displayOptions: {
+      show: {
+        type: ['voice'],
+      },
+    },
+    type: 'options',
+    options: [
+      {
+        name: 'Join Channel',
+        value: 'join',
+        description: 'Join a voice channel.',
+      },
+      {
+        name: 'Leave Channel',
+        value: 'leave',
+        description: 'Leave the current voice channel.',
+      },
+      {
+        name: 'Play Audio',
+        value: 'play',
+        description: 'Play audio from a URL in the voice channel.',
+      },
+      {
+        name: 'Stop Audio',
+        value: 'stop',
+        description: 'Stop the currently playing audio.',
+      },
+    ],
+    default: 'join',
+    description: 'Choose the voice action to perform.',
+  },
+  {
+    displayName: 'Voice Channel',
+    name: 'voiceChannelId',
+    required: true,
+    type: 'options',
+    typeOptions: {
+      loadOptionsMethod: 'getVoiceChannels',
+    },
+    displayOptions: {
+      show: {
+        type: ['voice'],
+        voiceAction: ['join', 'play'],
+      },
+    },
+    default: '',
+    description: 'The voice channel to join.',
+  },
+  {
+    displayName: 'Audio URL',
+    name: 'audioUrl',
+    type: 'string',
+    required: true,
+    displayOptions: {
+      show: {
+        type: ['voice'],
+        voiceAction: ['play'],
+      },
+    },
+    default: '',
+    description: 'The URL of the audio to play (supports YouTube URLs).',
   },
 ]

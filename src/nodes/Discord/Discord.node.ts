@@ -22,6 +22,7 @@ import {
   ipcRequest,
 } from './bot/helpers'
 import { options } from './Discord.node.options'
+import { VoiceManager } from './bot/voice'
 
 // we start the bot if we are in the main process
 if (!process.send) bot()
@@ -144,6 +145,11 @@ export class Discord implements INodeType {
           throw new NodeOperationError(this.getNode(), e)
         })
       },
+      async getVoiceChannels(this: ILoadOptionsFunctions): Promise<INodePropertyOptions[]> {
+        const credentials = (await this.getCredentials('discordApi')) as ICredentials
+        const channels = await getChannelsHelper(credentials)
+        return channels.filter(channel => (channel as any).type === 'voice')
+      },
     },
     credentialTest: {
       discordApiTest,
@@ -174,7 +180,33 @@ export class Discord implements INodeType {
       nodeParameters.baseUrl = credentials.baseUrl
       nodeParameters.auditLogReason = this.getNodeParameter('auditLogReason', itemIndex, '') as string
 
-      if (nodeParameters.channelId || nodeParameters.executionId) {
+      if (nodeParameters.type === 'voice') {
+        const voiceAction = this.getNodeParameter('voiceAction', itemIndex) as string
+        const guildId = this.getNodeParameter('guildId', itemIndex) as string
+
+        switch (voiceAction) {
+          case 'join': {
+            const channelId = this.getNodeParameter('voiceChannelId', itemIndex) as string
+            await VoiceManager.joinChannel(guildId, channelId, credentials.guild)
+            break
+          }
+          case 'leave': {
+            await VoiceManager.leaveChannel(guildId)
+            break
+          }
+          case 'play': {
+            const channelId = this.getNodeParameter('voiceChannelId', itemIndex) as string
+            const audioUrl = this.getNodeParameter('audioUrl', itemIndex) as string
+            await VoiceManager.joinChannel(guildId, channelId, credentials.guild)
+            await VoiceManager.playAudio(guildId, audioUrl)
+            break
+          }
+          case 'stop': {
+            await VoiceManager.stopAudio(guildId)
+            break
+          }
+        }
+      } else if (nodeParameters.channelId || nodeParameters.executionId) {
         // return the interaction result if there is one
         const res = await ipcRequest(
           `send:${
