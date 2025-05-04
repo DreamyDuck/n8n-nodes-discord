@@ -1,6 +1,6 @@
 {
-  "name": "n8n-nodes-discord-bot",
-  "version": "0.8.9",
+  "name": "@dreamyduck0/n8n-nodes-discord-bot-v2",
+  "version": "1.0.0",
   "description": "nodes to trigger workflows from Discord or send interactive messages. Uses the components API which allows to create dialogs (e.g. attach buttons and wait for the user to click on them)",
   "keywords": [
     "n8n",
@@ -11,14 +11,14 @@
     "n8n-community-node-package"
   ],
   "license": "MIT",
-  "homepage": "https://github.com/Raaid17/n8n-nodes-discord-bot",
+  "homepage": "https://github.com/DreamyDuck/n8n-nodes-discord-bot-v2",
   "author": {
-    "name": "kmcbride3",
-    "url": "https://github.com/Raaid17"
+    "name": "DreamyDuck",
+    "url": "https://github.com/DreamyDuck"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Raaid17/n8n-nodes-discord-bot.git"
+    "url": "git+https://github.com/DreamyDuck/n8n-nodes-discord-bot-v2.git"
   },
   "main": "index.js",
   "engines": {
