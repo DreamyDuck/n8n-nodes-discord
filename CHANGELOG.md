@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.2.0 (2023-??-??)
+
+### Added
+- Added OAuth2 authentication support for better connection reliability and permissions handling
+- Fixed "Missing Access" (401) error by implementing proper OAuth2 flow
+
+### Changed
+- Updated authentication mechanism to support both OAuth2 tokens and traditional Bot tokens
+- Improved error handling for authentication issues
+
 ## Released (2025-04-13 0.7.4)
 
 ### New Features

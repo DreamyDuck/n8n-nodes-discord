@@ -1,0 +1,47 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# n8n Node Structure
+
+n8n nodes follow a specific structure to integrate with the n8n platform. This project follows standard n8n community node patterns.
+
+## Node Architecture
+
+Each node in n8n consists of several key files:
+
+1. **Main Node File (`*.node.ts`)** - Contains the node class implementation with:
+   - Node definition and metadata
+   - `execute()` or `trigger()` methods to run the node's functionality
+
+2. **Node Options File (`*.node.options.ts`)** - Contains the node's UI option definitions:
+   - Parameters
+   - Input fields
+   - Option types
+   - Default values
+
+3. **Node Metadata File (`*.node.json`)** - Contains node display information:
+   - Name
+   - Color
+   - Icon
+   - Description
+
+## Discord Nodes Structure
+
+This package contains two main nodes:
+
+- **Discord Send Node**:
+  - [Discord.node.ts](mdc:src/nodes/Discord/Discord.node.ts) - Main implementation
+  - [Discord.node.options.ts](mdc:src/nodes/Discord/Discord.node.options.ts) - UI options
+  - [Discord.node.json](mdc:src/nodes/Discord/Discord.node.json) - Node metadata
+
+- **Discord Trigger Node**:
+  - [DiscordTrigger.node.ts](mdc:src/nodes/Discord/DiscordTrigger.node.ts) - Main implementation
+  - [DiscordTrigger.node.options.ts](mdc:src/nodes/Discord/DiscordTrigger.node.options.ts) - UI options
+  - [DiscordTrigger.node.json](mdc:src/nodes/Discord/DiscordTrigger.node.json) - Node metadata
+
+## Bot Implementation
+
+The Discord functionality relies on a bot that runs as a separate process:
+- [bot/](mdc:src/nodes/Discord/bot) - Contains the Discord.js bot implementation

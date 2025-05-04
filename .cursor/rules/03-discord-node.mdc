@@ -1,0 +1,46 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Discord Send Node
+
+The Discord Send node allows workflows to send messages and interactive components to Discord channels.
+
+## Key Files
+
+- [Discord.node.ts](mdc:src/nodes/Discord/Discord.node.ts) - Main node implementation
+- [Discord.node.options.ts](mdc:src/nodes/Discord/Discord.node.options.ts) - UI options definition
+- [Discord.node.json](mdc:src/nodes/Discord/Discord.node.json) - Node metadata
+
+## Features
+
+The Discord Send node supports multiple message types:
+
+1. **Simple Messages** - Send text messages with optional embeds
+2. **Button Prompts** - Interactive messages with clickable buttons
+3. **Select Prompts** - Interactive messages with dropdown selection
+4. **Actions** - Perform Discord actions like removing messages or managing roles
+
+## Implementation
+
+The node's main execution logic is in the `execute()` method of the Discord class:
+
+- It processes input parameters from the n8n workflow
+- Establishes IPC communication with the Discord bot
+- Sends messages or commands to Discord channels
+- For prompts, waits for user interaction before continuing the workflow
+- Returns data received from Discord interactions
+
+## Options
+
+The node options are defined in `Discord.node.options.ts` and include:
+
+- Credential selection
+- Channel selection
+- Message content configuration
+- Embed configuration
+- Button/select configuration
+- Action parameters
+- Timeout settings
+- Role mentions

@@ -1,0 +1,37 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# n8n Discord Nodes - Project Overview
+
+This is a community node package for n8n that provides Discord integration capabilities. The package includes nodes to trigger workflows from Discord or send interactive messages using Discord's components API.
+
+## Key Features
+
+- Two-way communication with Discord using a bot (no webhooks)
+- Interactive message components (buttons, selects)
+- Trigger workflows from Discord messages, commands, and events
+- Send rich messages with embeds, buttons, and selects
+- User presence and role management
+
+## Main Files
+
+- Main node definitions:
+  - [src/nodes/Discord/Discord.node.ts](mdc:src/nodes/Discord/Discord.node.ts) - The Discord Send node
+  - [src/nodes/Discord/DiscordTrigger.node.ts](mdc:src/nodes/Discord/DiscordTrigger.node.ts) - The Discord Trigger node
+  
+- Node configuration options:
+  - [src/nodes/Discord/Discord.node.options.ts](mdc:src/nodes/Discord/Discord.node.options.ts)
+  - [src/nodes/Discord/DiscordTrigger.node.options.ts](mdc:src/nodes/Discord/DiscordTrigger.node.options.ts)
+
+- Bot implementation:
+  - [src/nodes/Discord/bot/](mdc:src/nodes/Discord/bot) - Contains the Discord bot implementation
+
+- Credentials:
+  - [src/credentials/DiscordApi.credentials.ts](mdc:src/credentials/DiscordApi.credentials.ts) - Discord API credentials
+
+## Package Configuration
+
+- [package.json](mdc:package.json) - Contains package metadata and dependencies
+- [tsconfig.json](mdc:tsconfig.json) - TypeScript configuration

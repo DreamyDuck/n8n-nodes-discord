@@ -1,0 +1,48 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Discord Bot Implementation
+
+The Discord integration uses a Discord.js bot to handle real-time communication with Discord.
+
+## Key Files
+
+- [bot/index.ts](mdc:src/nodes/Discord/bot/index.ts) - Main bot initialization and setup
+- [bot/state.ts](mdc:src/nodes/Discord/bot/state.ts) - Bot state management
+- [bot/helpers.ts](mdc:src/nodes/Discord/bot/helpers.ts) - Helper functions for the bot
+- [bot/commands.ts](mdc:src/nodes/Discord/bot/commands.ts) - Bot command definitions
+
+## Directories
+
+- [bot/commands/](mdc:src/nodes/Discord/bot/commands) - Bot command implementations
+- [bot/discordClientEvents/](mdc:src/nodes/Discord/bot/discordClientEvents) - Discord event handlers
+- [bot/ipcEvents/](mdc:src/nodes/Discord/bot/ipcEvents) - IPC event handlers for communication with n8n
+
+## Architecture
+
+The bot is implemented using a multi-process architecture:
+
+1. **Main Process** - The Discord bot process that connects to Discord and listens for events
+2. **Child Processes** - n8n node processes that communicate with the bot via IPC
+
+The bot's design provides:
+
+- Persistent connection to Discord across workflow executions
+- Two-way communication between n8n and Discord
+- Event-based interaction handling
+- Support for interactive components
+- Command processing
+- User and server event monitoring
+
+## Communication
+
+Communication between n8n nodes and the Discord bot happens via Node.js IPC (Inter-Process Communication):
+
+1. Nodes send commands and data to the bot
+2. The bot processes these commands and interacts with Discord
+3. Discord events and responses are sent back to the nodes
+4. n8n workflows can then process the data received from Discord
+
+This architecture enables real-time, interactive communication with Discord from n8n workflows.

@@ -8,15 +8,25 @@ import state from './state'
 
 export interface ICredentials {
   clientId: string
-  token: string
+  clientSecret?: string
+  token?: string
+  access_token?: string
+  refresh_token?: string
   apiKey: string
   baseUrl: string
 }
 
 export const connection = (credentials: ICredentials): Promise<string> => {
   return new Promise((resolve, reject) => {
-    if (!credentials || !credentials.token || !credentials.clientId) {
+    if (!credentials || !credentials.clientId) {
       reject(new Error('credentials missing'))
+      return
+    }
+
+    // Get the token - either bot token or OAuth access token
+    const token = credentials.token || credentials.access_token
+    if (!token) {
+      reject(new Error('token missing'))
       return
     }
 
@@ -29,7 +39,7 @@ export const connection = (credentials: ICredentials): Promise<string> => {
       ipc.of.bot.on('credentials', (data: string) => {
         clearTimeout(timeout)
         if (data === 'error') reject(new Error('Invalid credentials'))
-        else if (data === 'missing') reject(new Error('Token or clientId missing'))
+        else if (data === 'missing') reject(new Error('Token missing'))
         else if (data === 'login') reject(new Error('Already logging in'))
         else if (data === 'different') resolve('Already logging in with different credentials')
         else resolve(data) // ready / already
