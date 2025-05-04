@@ -13,32 +13,86 @@ export interface ICredentials {
   baseUrl: string
 }
 
-export const connection = (credentials: ICredentials): Promise<string> => {
+export interface IOAuth2Credentials {
+  clientId: string
+  clientSecret: string
+  access_token: string
+  apiKey: string
+  baseUrl: string
+  oauthTokenData: {
+    access_token: string
+    token_type: string
+    expires_in: number
+    refresh_token: string
+    scope: string
+  }
+}
+
+export const isOAuth2Credentials = (credentials: any): credentials is IOAuth2Credentials => {
+  return 'oauthTokenData' in credentials && credentials.oauthTokenData;
+};
+
+export const isRegularCredentials = (credentials: any): credentials is ICredentials => {
+  return 'token' in credentials && typeof credentials.token === 'string';
+};
+
+export const connection = (credentials: ICredentials | IOAuth2Credentials): Promise<string> => {
   return new Promise((resolve, reject) => {
-    if (!credentials || !credentials.token || !credentials.clientId) {
+    if (!credentials) {
       reject(new Error('credentials missing'))
       return
     }
 
-    const timeout = setTimeout(() => reject(new Error('timeout')), 15000)
+    // Check if we're using OAuth2 credentials
+    if (isOAuth2Credentials(credentials)) {
+      // Use OAuth2 token
+      if (!credentials.clientId || !credentials.oauthTokenData?.access_token) {
+        reject(new Error('OAuth2 credentials incomplete'))
+        return
+      }
+      
+      // Map OAuth2 credentials to format expected by bot
+      const tokenCredentials: ICredentials = {
+        clientId: credentials.clientId,
+        token: credentials.oauthTokenData.access_token,
+        apiKey: credentials.apiKey,
+        baseUrl: credentials.baseUrl
+      };
+      
+      connectBot(tokenCredentials, resolve, reject);
+    } else if (isRegularCredentials(credentials)) {
+      // Use regular token
+      if (!credentials.token || !credentials.clientId) {
+        reject(new Error('credentials missing'))
+        return
+      }
+      
+      connectBot(credentials, resolve, reject);
+    } else {
+      reject(new Error('Invalid credential format'));
+    }
+  })
+}
 
-    ipc.config.retry = 1500
-    ipc.connectTo('bot', () => {
-      ipc.of.bot.emit('credentials', credentials)
+function connectBot(credentials: ICredentials, resolve: (value: string) => void, reject: (reason: Error) => void): void {
+  const timeout = setTimeout(() => reject(new Error('timeout')), 15000)
 
-      ipc.of.bot.on('credentials', (data: string) => {
-        clearTimeout(timeout)
-        if (data === 'error') reject(new Error('Invalid credentials'))
-        else if (data === 'missing') reject(new Error('Token or clientId missing'))
-        else if (data === 'login') reject(new Error('Already logging in'))
-        else if (data === 'different') resolve('Already logging in with different credentials')
-        else resolve(data) // ready / already
-      })
+  ipc.config.retry = 1500
+  ipc.connectTo('bot', () => {
+    ipc.of.bot.emit('credentials', credentials)
+
+    ipc.of.bot.on('credentials', (data: string) => {
+      clearTimeout(timeout)
+      if (data === 'error') reject(new Error('Invalid credentials'))
+      else if (data === 'missing') reject(new Error('Token or clientId missing'))
+      else if (data === 'login') reject(new Error('Already logging in'))
+      else if (data === 'different') resolve('Already logging in with different credentials')
+      else resolve(data) // ready / already
     })
   })
 }
 
-export const getChannels = async (credentials: ICredentials): Promise<INodePropertyOptions[]> => {
+export const getChannels = async (credentials: ICredentials | IOAuth2Credentials): Promise<INodePropertyOptions[]> => {
   const endMessage = ' - Close and reopen this node modal once you have made changes.'
 
   const res = await connection(credentials).catch((e: Error) => e)
@@ -88,7 +142,7 @@ export interface IRole {
   id: string
 }
 
-export const getRoles = async (credentials: ICredentials): Promise<INodePropertyOptions[]> => {
+export const getRoles = async (credentials: ICredentials | IOAuth2Credentials): Promise<INodePropertyOptions[]> => {
   const endMessage = ' - Close and reopen this node modal once you have made changes.'
 
   const res = await connection(credentials).catch((e: Error) => e)

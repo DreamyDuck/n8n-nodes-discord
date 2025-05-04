@@ -18,6 +18,7 @@ import {
   getChannels as getChannelsHelper,
   getRoles as getRolesHelper,
   ICredentials,
+  IOAuth2Credentials,
   ipcRequest,
 } from './bot/helpers'
 import { options } from './Discord.node.options'
@@ -42,6 +43,10 @@ const nodeDescription: INodeTypeDescription = {
       name: 'discordApi',
       required: true,
       testedBy: 'discordApiTest',
+    },
+    {
+      name: 'discordOAuth2Api',
+      required: true,
     },
   ],
   properties: options,
@@ -132,14 +137,40 @@ export class Discord implements INodeType {
   methods = {
     loadOptions: {
       async getChannels(this: ILoadOptionsFunctions): Promise<INodePropertyOptions[]> {
-        const credentials = (await this.getCredentials('discordApi')) as ICredentials
-        return await getChannelsHelper(credentials).catch((e) => {
+        let credentials;
+        
+        // First try to get OAuth2 credentials
+        try {
+          credentials = await this.getCredentials('discordOAuth2Api');
+        } catch (error) {
+          // If OAuth2 credentials fail, try regular credentials
+          try {
+            credentials = await this.getCredentials('discordApi');
+          } catch (e) {
+            throw new NodeOperationError(this.getNode(), 'No valid credentials provided');
+          }
+        }
+        
+        return await getChannelsHelper(credentials as ICredentials | IOAuth2Credentials).catch((e) => {
           throw new NodeOperationError(this.getNode(), e)
         })
       },
       async getRoles(this: ILoadOptionsFunctions): Promise<INodePropertyOptions[]> {
-        const credentials = (await this.getCredentials('discordApi')) as ICredentials
-        return await getRolesHelper(credentials).catch((e) => {
+        let credentials;
+        
+        // First try to get OAuth2 credentials
+        try {
+          credentials = await this.getCredentials('discordOAuth2Api');
+        } catch (error) {
+          // If OAuth2 credentials fail, try regular credentials
+          try {
+            credentials = await this.getCredentials('discordApi');
+          } catch (e) {
+            throw new NodeOperationError(this.getNode(), 'No valid credentials provided');
+          }
+        }
+        
+        return await getRolesHelper(credentials as ICredentials | IOAuth2Credentials).catch((e) => {
           throw new NodeOperationError(this.getNode(), e)
         })
       },
@@ -154,10 +185,21 @@ export class Discord implements INodeType {
     const returnData: INodeExecutionData[] = []
 
     // connection
-    const credentials = (await this.getCredentials('discordApi').catch((e) => {
-      throw new NodeOperationError(this.getNode(), e)
-    })) as unknown as ICredentials
-    await connection(credentials).catch((e) => {
+    let credentials;
+    
+    // First try to get OAuth2 credentials
+    try {
+      credentials = await this.getCredentials('discordOAuth2Api');
+    } catch (error) {
+      // If OAuth2 credentials fail, try regular credentials
+      try {
+        credentials = await this.getCredentials('discordApi');
+      } catch (e) {
+        throw new NodeOperationError(this.getNode(), 'No valid credentials provided');
+      }
+    }
+    
+    await connection(credentials as ICredentials | IOAuth2Credentials).catch((e) => {
       throw new NodeOperationError(this.getNode(), e)
     })
 
