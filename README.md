@@ -34,8 +34,6 @@ In order to send, listen to messages, get the list of channels or roles, you nee
 
 First, create an application by clicking on **New Application** in the [Developer Portal](https://discord.com/developers/applications).
 
-### Method 1: Traditional Bot Token (Original Method)
-
 Go to **OAuth2** and copy the client ID. On your n8n instance, you will create new Discord App credentials (**Credentials > New > Search for "Discord App" > Continue**) and paste the Client ID into the corresponding field. Don't close yet the modal.
 
 ![](images/oauth.png)
@@ -63,33 +61,6 @@ Save your credentials and got to **Settings > n8n API**, click **Create an API K
 ![](images/n8n-api.png)
 
 ![](images/credentials-3.png)
-
-### Method 2: OAuth2 Authentication (New Method)
-
-This method is recommended if you're experiencing "Missing Access" errors with the traditional bot token method.
-
-1. Go to the [Discord Developer Portal](https://discord.com/developers/applications)
-2. Select your application or create a new one
-3. Go to **OAuth2 > General**:
-   - Set a **Redirect URL** (this is important): `https://your-n8n-instance.com/rest/oauth2-credential/callback`
-   - Copy the **Client ID** and **Client Secret**
-
-4. In n8n, create new Discord App credentials (**Credentials > New > Search for "Discord App" > Continue**)
-   - The interface will now show OAuth2 fields
-   - Enter the **Client ID** and **Client Secret** from Discord
-   - Click on **Connect to Discord** button
-   - Authorize the application with your Discord account
-   
-5. The credentials will now use OAuth2 tokens which have better permission handling
-
-6. Make sure to set your n8n API key and base URL as with Method 1
-
-7. When adding the bot to your server, make sure to use an invite URL with these scopes:
-   - `bot`
-   - `applications.commands`
-   - `identify`
-   
-   And ensure all necessary bot permissions are selected.
 
 Now you will be able to use the **Discord Trigger** and **Discord Send** nodes on your workflows. The first time you setup one of these nodes, it will start the bot.
 

@@ -11,35 +11,23 @@ export default function (ipc: typeof Ipc, client: Client): void {
     try {
       addLog(`credentials state login ${state.login}, ready ${state.ready}`, client)
 
-      // Get the token - either bot token or OAuth access token
-      const token = data.token || data.access_token
-      const isOAuth = !!data.access_token
-      
       if (
         (!state.login && !state.ready) ||
-        (state.ready && (state.clientId !== data.clientId || state.token !== token))
+        (state.ready && (state.clientId !== data.clientId || state.token !== data.token))
       ) {
-        if (!token || !data.clientId) ipc.server.emit(socket, 'credentials', 'missing')
+        if (!data.token || !data.clientId) ipc.server.emit(socket, 'credentials', 'missing')
         else {
           state.login = true
           ipc.server.emit(socket, 'credentials', 'login')
           client
-            .login(token)
+            .login(data.token)
             .then(() => {
               addLog('logged !', client)
               state.ready = true
               state.login = false
               state.clientId = data.clientId
-              state.token = token
-              state.isOAuth = isOAuth
-              
-              // Store OAuth specific tokens if available
-              if (isOAuth) {
-                state.access_token = data.access_token || ''
-                state.refresh_token = data.refresh_token || ''
-              }
-              
-              commandsHandle(token, data.clientId, client)
+              state.token = data.token
+              commandsHandle(data.token, data.clientId, client)
               ipc.server.emit(socket, 'credentials', 'ready')
             })
             .catch((e: Error) => {

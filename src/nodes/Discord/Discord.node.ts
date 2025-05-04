@@ -241,27 +241,13 @@ async function discordApiTest(
   this: ICredentialTestFunctions,
   credential: ICredentialsDecrypted,
 ): Promise<INodeCredentialTestResult> {
-  const data = credential.data as unknown as ICredentials;
-  // Determine which token to use (OAuth access token or Bot Token)
-  const token = data.access_token || data.token;
-  
-  if (!token) {
-    return {
-      status: 'Error',
-      message: 'No valid token found. Please authenticate with Discord.',
-    };
-  }
-
-  const isOAuth = !!data.access_token;
-  const authType = isOAuth ? 'Bearer' : 'Bot';
-  
   const requestOptions = {
     method: 'GET',
-    uri: 'https://discord.com/api/v10/users/@me',
+    uri: 'https://discord.com/api/v10/oauth2/@me',
     headers: {
-      'Content-Type': 'application/json',
+      'Content-Type': 'application/x-www-form-urlencoded',
       'User-Agent': 'DiscordBot (https://www.discord.com, 1)',
-      Authorization: `${authType} ${token}`,
+      Authorization: `Bot ${credential.data?.token}`,
     },
     json: true,
   }
