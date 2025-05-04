@@ -9,7 +9,6 @@ import {
   INodeType,
   INodeTypeDescription,
   JsonObject,
-  NodeConnectionType,
   NodeOperationError,
 } from 'n8n-workflow'
 
@@ -29,15 +28,15 @@ if (!process.send) bot()
 const nodeDescription: INodeTypeDescription = {
   displayName: 'Discord Send',
   name: 'discord',
-  group: ['discord'],
+  group: ['output'],
   version: 1,
   description: 'Sends messages, embeds and prompts to Discord',
   defaults: {
     name: 'Discord Send',
   },
   icon: 'file:discord.svg',
-  inputs: [NodeConnectionType.Main],
-  outputs: [NodeConnectionType.Main],
+  inputs: ['main'],
+  outputs: ['main'],
   credentials: [
     {
       name: 'discordApi',
